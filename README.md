@@ -1,3 +1,5 @@
+**This is a fork of [Cognitive-AI-Systems/pogema](https://github.com/Cognitive-AI-Systems/pogema) updated to support gymnasium ≥1.0, pydantic ≥2.0, and numpy ≥2.0.**
+
 <div align="center">
 
 
@@ -138,6 +140,40 @@ env = pogema_v0(grid_config=grid_config)
 
 
 
+
+## Dependency Updates
+
+This version updates the core dependencies to their latest major versions. All changes are backward-compatible — no functional behavior has been altered.
+
+### Updated Packages
+
+| Package | Previous | Updated |
+|---------|----------|---------|
+| `gymnasium` | `>=0.28.1` | `>=1.0.0` |
+| `pydantic` | `>=1.0.0` | `>=2.0.0` |
+| `numpy` | `<=1.26.4` | `>=2.0.0` |
+| `pettingzoo` | `>=1.23.1` | `>=1.24.0` |
+| `pytest` | `>=7.0.0` | `>=7.0.0` |
+| `tabulate` | `>=0.9.0` | `>=0.9.0` |
+
+### Migration Notes
+
+**gymnasium 1.x**
+
+`gymnasium` 1.0 removed the built-in `__getattr__` forwarding from `Wrapper`. All custom wrapper classes (`MultiTimeLimit`, `PersistentWrapper`, `AnimationMonitor`, `SingleAgentWrapper`, metric wrappers, and SampleFactory integration wrappers) now explicitly define `__getattr__` to forward attribute lookups to the inner environment. This restores the same behavior that existed in gymnasium 0.x.
+
+**pydantic 2.x**
+
+`GridConfig` has been migrated from pydantic v1 to v2:
+
+- `@validator` / `@root_validator` → `@field_validator` / `@model_validator`
+- `.dict()` → `.model_dump()`
+- `class Config` → `model_config = ConfigDict(...)`
+- `validate_default=True` is now explicitly set so that default field values are also validated, matching the previous behavior.
+
+**numpy 2.x**
+
+No code changes were required. numpy 2.x is fully compatible with the existing codebase.
 
 ## Citation
 If you use this repository in your research or wish to cite it, please make a reference to our paper: 
