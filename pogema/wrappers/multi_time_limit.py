@@ -2,6 +2,11 @@ from gymnasium.wrappers import TimeLimit
 
 
 class MultiTimeLimit(TimeLimit):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
     def step(self, action):
         observation, reward, terminated, truncated, info = self.env.step(action)
         self._elapsed_steps += 1

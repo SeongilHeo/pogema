@@ -5,6 +5,11 @@ from gymnasium import Wrapper
 
 
 class AbstractMetric(Wrapper):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
     def _compute_stats(self, step, is_on_goal, finished):
         raise NotImplementedError
 

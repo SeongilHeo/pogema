@@ -39,9 +39,9 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/Cognitive-AI-Systems/pogema',
     install_requires=[
-        "gymnasium==0.28.1",
-        "numpy>1.23.5,<=1.26.4",
-        "pydantic>=1.8.2,<=1.9.1",
+        "gymnasium>=1.0.0",
+        "numpy>=2.0.0",
+        "pydantic>=2.0.0",
     ],
     extras_require={
 
@@ -49,5 +49,5 @@ setup(
     package_dir={'': './'},
     packages=find_packages(where='./', include='pogema*'),
     include_package_data=True,
-    python_requires=">=3.8,<3.13"
+    python_requires=">=3.9,<3.14"
 )

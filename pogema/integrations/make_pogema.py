@@ -23,6 +23,10 @@ def _make_py_marl_integration(grid_config, *_, **__):
 
 
 class SingleAgentWrapper(Wrapper):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
 
     def step(self, action):
         observations, rewards, terminated, truncated, infos = self.env.step(

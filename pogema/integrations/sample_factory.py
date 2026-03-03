@@ -4,6 +4,11 @@ from gymnasium import Wrapper
 
 
 class IsMultiAgentWrapper(Wrapper):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
     def __init__(self, env):
         super().__init__(env)
 
@@ -15,6 +20,11 @@ class IsMultiAgentWrapper(Wrapper):
 
 
 class MetricsForwardingWrapper(Wrapper):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
     def step(self, action):
 
         observations, rewards, terminated, truncated, infos = self.env.step(action)
@@ -25,6 +35,11 @@ class MetricsForwardingWrapper(Wrapper):
 
 
 class AutoResetWrapper(Wrapper):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
     def step(self, action):
         observations, rewards, terminated, truncated, infos = self.env.step(action)
         if all(terminated) or all(truncated):

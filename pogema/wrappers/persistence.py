@@ -31,6 +31,14 @@ class AgentState:
 
 
 class PersistentWrapper(Wrapper):
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        try:
+            return getattr(self.env, name)
+        except AttributeError:
+            return getattr(self.env.unwrapped, name)
+
     def __init__(self, env, xy_offset=None):
         super().__init__(env)
         self._step = None

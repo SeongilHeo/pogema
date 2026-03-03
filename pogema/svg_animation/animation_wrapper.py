@@ -1,6 +1,6 @@
 import os
 from itertools import cycle
-from gymnasium import logger, Wrapper
+from gymnasium import Wrapper
 
 from pogema import GridConfig
 from pogema.svg_animation.animation_drawer import AnimationConfig, SvgSettings, GridHolder, AnimationDrawer
@@ -12,8 +12,15 @@ class AnimationMonitor(Wrapper):
     Defines the animation, which saves the episode as SVG.
     """
 
+    def __getattr__(self, name):
+        if name == 'env':
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
     def __init__(self, env, animation_config=AnimationConfig()):
-        self._working_radius = env.grid_config.obs_radius - 1
+        base_env = env.unwrapped
+        self.grid_config = base_env.grid_config
+        self._working_radius = self.grid_config.obs_radius - 1
         env = PersistentWrapper(env, xy_offset=-self._working_radius)
 
         super().__init__(env)
@@ -42,9 +49,7 @@ class AnimationMonitor(Wrapper):
             save_tau = self.animation_config.save_every_idx_episode
             if save_tau:
                 if (self._episode_idx + 1) % save_tau or save_tau == 1:
-                    if not os.path.exists(self.animation_config.directory):
-                        logger.info(f"Creating pogema monitor directory {self.animation_config.directory}", )
-                        os.makedirs(self.animation_config.directory, exist_ok=True)
+                    os.makedirs(self.animation_config.directory, exist_ok=True)
 
                     path = os.path.join(self.animation_config.directory,
                                         self.pick_name(self.grid_config, self._episode_idx))
